@@ -1,0 +1,39 @@
+﻿stbnametags {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	pixel-snap: 0;
+
+	stbbasenametag {
+		font-family: Poppins;
+		position: absolute;
+		font-weight: 500;
+		color: white;
+		backdrop-filter-blur: 10px;
+		background-color: rgba( #222, 0.3 );
+		font-size: 40px;
+		transform-origin: 50% 0%;
+		border-radius: 50px;
+		border-width: 3px;
+		border-color: rgba( white, 0.6 );
+		align-items: center;
+		justify-content: center;
+		flex-direction: row-reverse;
+
+
+		label {
+			padding: 1px 60px;
+			padding-left: 40px;
+		}
+
+		image {
+			width: 60px;
+			height: 60px;
+			margin: 20px;
+			margin-right: 0px;
+			border-radius: 100px;
+		}
+	}
+}

@@ -1,0 +1,203 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:modeldoc29:version{3cec427c-1b0e-4d48-a90a-0436f33a6041} -->
+{
+	rootNode = 
+	{
+		_class = "RootNode"
+		children = 
+		[
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						filename = "models\\dmx\\mesh\\player_marble.dmx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 45.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = [  ]
+						}
+					},
+				]
+			},
+			{
+				_class = "MaterialGroupList"
+				children = 
+				[
+					{
+						_class = "DefaultMaterialGroup"
+						remaps = 
+						[
+							{
+								from = "materials/dev/primary_blue.vmat"
+								to = "materials/marble_blue.vmat"
+							},
+							{
+								from = "materials/dev/primary_red.vmat"
+								to = "materials/marble_green.vmat"
+							},
+						]
+						use_global_default = false
+						global_default_material = ""
+					},
+					{
+						_class = "MaterialGroup"
+						name = "1"
+						remaps = [  ]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "2"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_blue.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_orange.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "3"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_purple.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_yellow.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "4"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_yellow.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_orange.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "5"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_red.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_purple.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "6"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_red.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_green.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "7"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_purple.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_blue.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "8"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_purple.vmat"
+							},
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_green.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "9"
+						remaps = 
+						[
+							{
+								from = "materials/marble_blue.vmat"
+								to = "materials/marble_orange.vmat"
+							},
+						]
+					},
+					{
+						_class = "MaterialGroup"
+						name = "10"
+						remaps = 
+						[
+							{
+								from = "materials/marble_green.vmat"
+								to = "materials/marble_yellow.vmat"
+							},
+						]
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeSphere"
+						parent_bone = ""
+						surface_prop = "marble"
+						collision_prop = "default"
+						radius = 16.0
+						center = [ 0.0, 0.0, 0.0 ]
+					},
+				]
+			},
+		]
+		model_archetype = ""
+		primary_associated_entity = ""
+		anim_graph_name = ""
+	}
+}
