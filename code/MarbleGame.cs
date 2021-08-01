@@ -51,8 +51,8 @@ namespace superterryball
 			if ( PlayersFinished >= Client.All.Count && IsServer )
 				FloorEnd( 5f );
 
-			if ( Input.Pressed( InputButton.Slot0 ) && IsServer )
-				FloorEnd( 0f );
+			//if ( Input.Pressed( InputButton.Slot0 ) && IsServer )
+			//	FloorEnd( 0f );
 
 			if ( setLevelTimer )
 			{
