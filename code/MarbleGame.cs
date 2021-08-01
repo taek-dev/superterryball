@@ -71,6 +71,13 @@ namespace superterryball
 
 		}
 
+		[ServerCmd("skip_floor")]
+		public static void SkipFloor()
+		{
+			if ( MarbleGame.Current.GameActive && Host.IsServer )
+				MarbleGame.Current.FloorEnd( 0f );
+		}
+
 		/// <summary>
 		/// A client has joined the server. Make them a pawn to play with
 		/// </summary>
