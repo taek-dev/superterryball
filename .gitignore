@@ -2,7 +2,6 @@ code/*.csproj
 code/obj
 code/Properties/launchSettings.json
 materials/raw_textures
-models/dmx
 .intermediate
 tools_asset_info.bin
 _bakeresourcecache
