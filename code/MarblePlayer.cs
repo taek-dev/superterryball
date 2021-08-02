@@ -74,6 +74,9 @@ namespace superterryball
 			SphereModel.SetInteractsExclude( CollisionLayer.Player );
 			SphereModel.Tags.Add( "player" );
 
+			CollisionGroup = CollisionGroup.Player;
+			SetInteractsExclude( CollisionLayer.Player );
+
 			SphereModel.Position = Position;
 			Parent = SphereModel;
 			Position = SphereModel.Position;

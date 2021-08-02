@@ -29,6 +29,7 @@ namespace superterryball
 			var tr = Trace.Ray( Pos, targetPos )
 					.Ignore( cl.Pawn )
 					.WithoutTags( "player" )
+					.WorldOnly()
 					.Radius( 8 )
 					.Run();
 
