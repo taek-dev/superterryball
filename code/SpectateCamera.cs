@@ -22,7 +22,8 @@ namespace superterryball
 			Rot = targetRot;
 
 			// position
-			Pos = cl.Pawn.Position;
+			if ( cl.Pawn != null )
+				Pos = cl.Pawn.Position;
 			var targetPos = Pos + Input.Rotation.Right;
 			targetPos += Input.Rotation.Forward * -orbitDistance;
 
