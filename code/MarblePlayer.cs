@@ -7,7 +7,8 @@ namespace superterryball
 {
 	public partial class MarblePlayer : Player
 	{
-		private ModelEntity citizenModel;
+		public ModelEntity SphereModel { get; set; }
+		private ModelEntity CitizenModel { get; set; }
 		private bool isColored { get; set; }
 		[Net] public string speedString { get; set; }
 		[Net] public string spectateSpeedString { get; set; }
@@ -24,13 +25,20 @@ namespace superterryball
 		{
 			SetModel( "models/player_marble.vmdl" );
 
-			if ( citizenModel == null )
+			if (SphereModel == null )
 			{
-				citizenModel = new ModelEntity();
-				citizenModel.SetModel( "models/citizen/citizen.vmdl" );
-				citizenModel.Parent = this;
-				citizenModel.Scale *= .375f;
-				citizenModel.Position += new Vector3( 0, 0, -14.8f );
+				SphereModel = new ModelEntity();
+				SphereModel.SetModel( "models/player_marble.vmdl" );
+				SphereModel.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
+			}
+
+			if ( CitizenModel == null )
+			{
+				CitizenModel = new ModelEntity();
+				CitizenModel.SetModel( "models/citizen/citizen.vmdl" );
+				CitizenModel.Parent = this;
+				CitizenModel.Scale *= .375f;
+				CitizenModel.Position += new Vector3( 0, 0, -14.8f );
 			}
 
 			Dress();
@@ -42,11 +50,7 @@ namespace superterryball
 
 			isPlaying = true;
 
-			PhysicsEnabled = true;
-			EnableAllCollisions = true;
-			EnableDrawing = true;
-			EnableHideInFirstPerson = true;
-			EnableShadowInFirstPerson = true;
+			Parent = null;
 
 			// base respawn stuff
 			LifeState = LifeState.Alive;
@@ -58,18 +62,28 @@ namespace superterryball
 			ResetInterpolation();
 			//
 
-			CollisionGroup = CollisionGroup.Player;
-			SetInteractsWith( CollisionLayer.Trigger );
-			SetInteractsExclude( CollisionLayer.Player );
-			Tags.Add( "player" );
-			SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
+			SetupPhysicsFromModel( PhysicsMotionType.Static );
+
+			PhysicsEnabled = false;
+			EnableAllCollisions = true;
+			EnableDrawing = false;
+			EnableHideInFirstPerson = true;
+			EnableShadowInFirstPerson = true;
+
+			SphereModel.CollisionGroup = CollisionGroup.Player;
+			SphereModel.SetInteractsExclude( CollisionLayer.Player );
+			SphereModel.Tags.Add( "player" );
+
+			SphereModel.Position = Position;
+			Parent = SphereModel;
+			Position = SphereModel.Position;
 
 			if (IsServer)
 			{
-				Position += new Vector3( 0, 0, 25 );
-				Velocity = Vector3.Zero;
-				Velocity += new Vector3( 0, 0, -400 );
-				Rotation = Rotation.From
+				SphereModel.Position += new Vector3( 0, 0, 25 );
+				SphereModel.Velocity = Vector3.Zero;
+				SphereModel.Velocity += new Vector3( 0, 0, -400 );
+				SphereModel.Rotation = Rotation.From
 					( Rand.Float( 0, 360 ),
 					Rand.Float( 0, 360 ),
 					Rand.Float( 0, 360 ) );
@@ -88,17 +102,14 @@ namespace superterryball
 			cl.SetScore( "deaths", NumOfDeaths );
 
 			// changes the marble skin
-			if ( !isColored )
+			if ( !isColored && SphereModel != null )
 			{
-				SetMaterialGroup( Rand.Int( 1, 10 ) );
+				SphereModel.SetMaterialGroup( Rand.Int( 1, 10 ) );
 				isColored = true;
 			}
 
 			if ( IsServer )
 				speedString = (Velocity.Length / 17.6).ToString( "F0" );
-
-			if ( Ascend )
-				PhysicsGroup.AddVelocity( Vector3.Up * 30 );
 
 			if ( Spectating && MarbleGame.Current.GameActive )
 				Spectate();
@@ -106,6 +117,28 @@ namespace superterryball
 			if ( IsServer )
 			if ( MarbleGame.Current.CurrentTimer <= 0 && isPlaying )
 				OnLose();
+
+			// movement
+			if (SphereModel != null )
+			{
+				if ( Controller != null )
+				{
+					// get the velocity
+					Vector3 targetForward = Input.Rotation.Forward;
+					targetForward.z = 0;
+
+					Vector3 vel = (targetForward * Input.Forward) + (Input.Rotation.Left * Input.Left);
+					vel = vel.Normal * 400;
+					SphereModel.Velocity += vel * Time.Delta;
+
+					// slow the player down
+					SphereModel.Velocity = Vector3.Lerp( Velocity, new Vector3( 0f, 0f, Velocity.z ), Time.Delta * 0.6f );
+				}
+
+				// send the player soaring if they win
+				if ( Ascend )
+					SphereModel.PhysicsGroup.AddVelocity( Vector3.Up * 30 );
+			}
 		}
 
 		public override void OnKilled()
@@ -255,7 +288,7 @@ namespace superterryball
 				"models/citizen_clothes/trousers/trousers.police.vmdl",
 				"models/citizen_clothes/trousers/trousers.smart.vmdl",
 				"models/citizen_clothes/trousers/trousers.smarttan.vmdl",
-				"models/citizen/clothes/trousers_tracksuit.vmdl",
+				//"models/citizen/clothes/trousers_tracksuit.vmdl",
 				"models/citizen_clothes/trousers/trousers_tracksuitblue.vmdl",
 				"models/citizen_clothes/trousers/trousers_tracksuit.vmdl",
 				"models/citizen_clothes/shoes/shorts.cargo.vmdl",
@@ -263,11 +296,11 @@ namespace superterryball
 
 				pants = new ModelEntity();
 				pants.SetModel( model );
-				pants.SetParent( citizenModel, true );
+				pants.SetParent( CitizenModel, true );
 				pants.EnableShadowInFirstPerson = true;
 				pants.EnableHideInFirstPerson = true;
 
-				citizenModel.SetBodyGroup( "Legs", 1 );
+				CitizenModel.SetBodyGroup( "Legs", 1 );
 			}
 
 			if ( true )
@@ -282,18 +315,18 @@ namespace superterryball
 
 				jacket = new ModelEntity();
 				jacket.SetModel( model );
-				jacket.SetParent( citizenModel, true );
+				jacket.SetParent( CitizenModel, true );
 				jacket.EnableShadowInFirstPerson = true;
 				jacket.EnableHideInFirstPerson = true;
 
 				var propInfo = jacket.GetModel().GetPropData();
 				if ( propInfo.ParentBodyGroupName != null )
 				{
-					citizenModel.SetBodyGroup( propInfo.ParentBodyGroupName, propInfo.ParentBodyGroupValue );
+					CitizenModel.SetBodyGroup( propInfo.ParentBodyGroupName, propInfo.ParentBodyGroupValue );
 				}
 				else
 				{
-					citizenModel.SetBodyGroup( "Chest", 0 );
+					CitizenModel.SetBodyGroup( "Chest", 0 );
 				}
 			}
 
@@ -307,11 +340,11 @@ namespace superterryball
 
 				shoes = new ModelEntity();
 				shoes.SetModel( model );
-				shoes.SetParent( citizenModel, true );
+				shoes.SetParent( CitizenModel, true );
 				shoes.EnableShadowInFirstPerson = true;
 				shoes.EnableHideInFirstPerson = true;
 
-				citizenModel.SetBodyGroup( "Feet", 1 );
+				CitizenModel.SetBodyGroup( "Feet", 1 );
 			}
 
 			if ( true )
@@ -337,7 +370,7 @@ namespace superterryball
 
 				hat = new ModelEntity();
 				hat.SetModel( model );
-				hat.SetParent( citizenModel, true );
+				hat.SetParent( CitizenModel, true );
 				hat.EnableShadowInFirstPerson = true;
 				hat.EnableHideInFirstPerson = true;
 			}

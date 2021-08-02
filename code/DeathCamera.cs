@@ -32,8 +32,8 @@ namespace superterryball
 			var postTargetRot = Rotation.LookAt( dir );
 			Rot = Rotation.Lerp( Rot, postTargetRot, Time.Delta * 10f );
 
+			ZFar = 5000f;
 			FieldOfView = 90;
-
 			Viewer = null;
 		}	
 	}

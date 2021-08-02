@@ -9,18 +9,8 @@ namespace superterryball
 {
 	public partial class MarbleController : BasePlayerController
 	{
-		public override void Simulate()
-		{
-			// get the velocity
-			Vector3 targetForward = Input.Rotation.Forward;
-			targetForward.z = 0;
-
-			Vector3 vel = (targetForward * Input.Forward) + (Input.Rotation.Left * Input.Left);
-			vel = vel.Normal * 400;
-			Velocity += vel * Time.Delta;
-
-			// slow the player down
-			Velocity = Vector3.Lerp( Velocity, new Vector3( 0f, 0f, Velocity.z ), Time.Delta * 0.6f );
-		}
+		// this just needs to be here, it serves no purpose besides being here
+		// some stuff relies on this being null or not (including actual movement)
+		// so having this be empty isn't really too big a deal
 	}
 }
