@@ -19,8 +19,8 @@ namespace superterryball
 			vel = vel.Normal * 400;
 			Velocity += vel * Time.Delta;
 
-			// clamp the velocity
-			//Velocity = new Vector3( MathX.Clamp( Velocity.x, -1000, 1000 ), MathX.Clamp( Velocity.y, -1000, 1000 ), Velocity.z );
+			// slow the player down
+			Velocity = Vector3.Lerp( Velocity, new Vector3( 0f, 0f, Velocity.z ), Time.Delta * 0.6f );
 		}
 	}
 }

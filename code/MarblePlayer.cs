@@ -98,9 +98,6 @@ namespace superterryball
 			if ( IsServer )
 				speedString = (Velocity.Length / 17.6).ToString( "F0" );
 
-			// slow down there, bucko
-			Velocity = Vector3.Lerp( Velocity, new Vector3(0f, 0f, Velocity.z), Time.Delta * 0.6f );
-
 			if ( Ascend )
 				PhysicsGroup.AddVelocity( Vector3.Up * 30 );
 
