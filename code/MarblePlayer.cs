@@ -74,7 +74,6 @@ namespace superterryball
 					Rand.Float( 0, 360 ),
 					Rand.Float( 0, 360 ) );
 			}
-
 		}
 
 		/// <summary>

@@ -71,11 +71,21 @@ namespace superterryball
 
 		}
 
-		[ServerCmd("skip_floor")]
+		[ServerCmd("floor_skip")]
 		public static void SkipFloor()
 		{
 			if ( MarbleGame.Current.GameActive && Host.IsServer )
 				MarbleGame.Current.FloorEnd( 0f );
+		}
+
+		[ServerCmd( "floor_change" )]
+		public static void ChangeFloor( int floorNum )
+		{
+			if ( MarbleGame.Current.GameActive && Host.IsServer )
+			{
+				MarbleGame.Current.FloorNumber = floorNum - 1;
+				MarbleGame.Current.FloorEnd( 0f );
+			}
 		}
 
 		/// <summary>
@@ -106,6 +116,9 @@ namespace superterryball
 			FloorNumber++;
 
 			if ( FloorNumber > FloorAmount )
+				FloorNumber = 1;
+
+			if ( FloorNumber < 1 )
 				FloorNumber = 1;
 
 			foreach ( Client cl in Client.All )
