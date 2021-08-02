@@ -20,14 +20,15 @@ namespace superterryball.ui
 			playingColor = Color.Cyan;
 			notPlayingColor = Color.Yellow;
 
-			if ( (Local.Client.Pawn as MarblePlayer).isPlaying )
+			if ( MarbleGame.Current.GameActive )
 				Style.BorderColor = playingColor;
 			else
 				Style.BorderColor = notPlayingColor;
 
 			Avatar = Add.Image();
 			NameLabel = Add.Label( "Name", "name" );
-			if ( (Local.Client.Pawn as MarblePlayer).isPlaying )
+
+			if ( MarbleGame.Current.GameActive )
 				NameLabel.Style.FontColor = playingColor;
 			else
 				NameLabel.Style.FontColor = notPlayingColor;
