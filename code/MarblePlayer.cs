@@ -247,8 +247,8 @@ namespace superterryball
 			if ( Controller != null )
             {
 				// Camera lean
-				horizontalLean = horizontalLean.LerpTo( Input.Left * 10f, Time.Delta * 15.0f );
-				verticalLean = verticalLean.LerpTo( -Input.Forward * 8f, Time.Delta * 15.0f );
+				horizontalLean = horizontalLean.LerpTo( Input.Left * 5f, Time.Delta * 15.0f );
+				verticalLean = verticalLean.LerpTo( -Input.Forward * 4f, Time.Delta * 15.0f );
 			}
 
 			if ( Spectating )
