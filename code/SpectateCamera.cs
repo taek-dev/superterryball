@@ -36,6 +36,7 @@ namespace superterryball
 
 			Pos = tr.EndPos;
 
+			ZNear = 1.0f;
 			ZFar = 5000f;
 			FieldOfView = 90;
 			Viewer = null;
