@@ -322,15 +322,7 @@ namespace superterryball
 				jacket.EnableShadowInFirstPerson = true;
 				jacket.EnableHideInFirstPerson = true;
 
-				var propInfo = jacket.GetModel().GetPropData();
-				if ( propInfo.ParentBodyGroupName != null )
-				{
-					CitizenModel.SetBodyGroup( propInfo.ParentBodyGroupName, propInfo.ParentBodyGroupValue );
-				}
-				else
-				{
-					CitizenModel.SetBodyGroup( "Chest", 0 );
-				}
+				CitizenModel.SetBodyGroup( "Chest", 1 );
 			}
 
 			if ( true )

@@ -5,15 +5,17 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace superterryball.ui
 {
 	public partial class STBScoreboard<T> : Panel where T : STBScoreboardEntry, new()
 	{
 		public Panel Canvas { get; protected set; }
-		Dictionary<int, T> Entries = new ();
+		Dictionary<Client, T> Rows = new();
 
 		public Panel Header { get; protected set; }
+		public Label Heading { get; set; }
 
 		public STBScoreboard()
 		{
@@ -23,23 +25,42 @@ namespace superterryball.ui
 			AddHeader();
 
 			Canvas = Add.Panel( "canvas" );
-
-			PlayerScore.OnPlayerAdded += AddPlayer;
-			PlayerScore.OnPlayerUpdated += UpdatePlayer;
-			PlayerScore.OnPlayerRemoved += RemovePlayer;
-
-			foreach ( var player in PlayerScore.All )
-			{
-				AddPlayer( player );
-			}
 		}
 
 		public override void Tick()
 		{
 			base.Tick();
+
 			SetClass( "open", Input.Down( InputButton.Score ) );
+
+			if ( !IsVisible )
+				return;
+
+			//
+			// Clients that were added
+			//
+			foreach ( var client in Client.All.Except( Rows.Keys ) )
+			{
+				var entry = AddClient( client );
+				Rows[client] = entry;
+			}
+
+			foreach ( var client in Rows.Keys.Except( Client.All ) )
+			{
+				if ( Rows.TryGetValue( client, out var row ) )
+				{
+					row?.Delete();
+					Rows.Remove( client );
+				}
+			}
 		}
 
+		protected virtual T AddClient( Client entry )
+		{
+			var p = Canvas.AddChild<T>();
+			p.Client = entry;
+			return p;
+		}
 
 		protected virtual void AddHeader() 
 		{
@@ -48,41 +69,15 @@ namespace superterryball.ui
 			Header.Add.Label( "Wins", "wins" );
 			Header.Add.Label( "Deaths", "deaths" );
 		}
-
-		protected virtual void AddPlayer( PlayerScore.Entry entry )
-		{
-			var p = Canvas.AddChild<T>();
-			p.UpdateFrom( entry );
-
-			Entries[entry.Id] = p;
-		}
-
-		protected virtual void UpdatePlayer( PlayerScore.Entry entry )
-		{
-			if ( Entries.TryGetValue( entry.Id, out var panel ) )
-			{
-				panel.UpdateFrom( entry );
-			}
-		}
-
-		protected virtual void RemovePlayer( PlayerScore.Entry entry )
-		{
-			if ( Entries.TryGetValue( entry.Id, out var panel ) )
-			{
-				panel.Delete();
-				Entries.Remove( entry.Id );
-			}
-		}
 	}
 
 	public partial class STBScoreboardEntry : Panel
 	{
-		public PlayerScore.Entry Entry;
+		public Client Client;
 
 		public Label PlayerName;
 		public Label Wins;
 		public Label Deaths;
-
 
 		public STBScoreboardEntry()
 		{
@@ -93,13 +88,37 @@ namespace superterryball.ui
 			Deaths = Add.Label( "", "deaths" );
 		}
 
-		public virtual void UpdateFrom( PlayerScore.Entry entry )
+		RealTimeSince TimeSinceUpdate = 0;
+
+		public override void Tick()
 		{
-			Entry = entry;
-			PlayerName.Text = entry.GetString( "name" );
-			Wins.Text = entry.Get<int>( "wins", 0 ).ToString();
-			Deaths.Text = entry.Get<int>( "deaths", 0 ).ToString();
-			SetClass( "me", Local.Client != null && entry.Get<ulong>( "steamid", 0 ) == Local.Client.SteamId );
+			base.Tick();
+
+			if ( !IsVisible )
+				return;
+
+			if ( !Client.IsValid() )
+				return;
+
+			if ( TimeSinceUpdate < 0.1f )
+				return;
+
+			TimeSinceUpdate = 0;
+			UpdateData();
+		}
+
+		public virtual void UpdateData()
+		{
+			PlayerName.Text = Client.Name;
+			Deaths.Text = Client.GetInt( "deaths" ).ToString();
+			Wins.Text = Client.GetInt( "wins" ).ToString();
+			SetClass( "me", Client == Local.Client );
+		}
+
+		public virtual void UpdateFrom( Client client )
+		{
+			Client = client;
+			UpdateData();
 		}
 	}
 }
